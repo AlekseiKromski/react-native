@@ -1,13 +1,25 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {View, StyleSheet, TextInput, Button} from 'react-native';
 
 export const AddTodo = props => {
 
+    const [value, setValue] = useState('');
     return (
         <View style={styles.wrapper}>
-            <TextInput style={styles.input} />
+            <TextInput
+                onChangeText={setValue}
+                value={value} 
+                style={styles.input}
+                autoCorrect={false}
+                autoCapitalize='none'
+            />
             <Button onPress={() => {
-                props.onSubmit('est')
+                if(value !== '') {
+                    props.onSubmit(value)
+                    setValue('')
+                }else{
+                    alert("Название не может быть пустым")
+                }
             }} title='Добавить'/>
         </View>
     )

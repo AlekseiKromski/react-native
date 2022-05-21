@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, FlatList} from 'react-native';
 import {NavBar} from './src/NavBar';
 import { AddTodo } from './src/AddToDo';
 import React, {useState} from 'react';
+import {ToDo} from './src/ToDo'
 export default function App() {
   const [todos, setTodos] = useState([])
 
@@ -14,9 +15,18 @@ export default function App() {
 
     setTodos((prevTodosState) => {
       return [
-        ...prevTodosState, newTodo
+        newTodo, ...prevTodosState
       ]
     })
+  }
+
+  const removeItem = (id) => {
+    let todos_ = todos.filter(todo =>{
+      if(todo.id !== id){
+        return todo
+      }
+    })
+    setTodos(todos_)
   }
 
   return (
@@ -24,13 +34,13 @@ export default function App() {
       <NavBar title={'To do app'}/>
       <View style={styles.applicationContainer}>
         <AddTodo onSubmit={addTodo}/>
-        <View>
-          {
-            todos.map(todo => {
-              return <Text key={todo.id}>{todo.title}</Text>
-            })
-          }
-        </View>
+        <FlatList
+          data={todos}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => {
+            return <ToDo removeItem={removeItem} todo={item}></ToDo>
+          }}
+        />
       </View>
     </View>
   );
